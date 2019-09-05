@@ -4,5 +4,5 @@ IFS=- read alpine_version jre_version <<< $DOCKER_TAG
 docker build --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
              --build-arg VCS_REF=`git rev-parse --short HEAD` \
              --build-arg ALPINE_VERSION="$alpine_version" \
-             --build-arg JRE_VERSION="$jre_version" \
+             --build-arg JRE_VERSION="${jre_version##jre}" \
              -t $IMAGE_NAME .

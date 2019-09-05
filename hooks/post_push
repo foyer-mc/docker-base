@@ -1,0 +1,18 @@
+#!/bin/bash
+IFS=- read alpine_version jre_version <<< $DOCKER_TAG
+
+push() {
+    docker tag $IMAGE_NAME $DOCKER_REPO:$1
+    docker push $DOCKER_REPO:$1
+}
+
+push $jre_version
+
+git remote set-branches origin '*'
+git fetch
+
+latest=$(git for-each-ref --format '%(refname)' --sort=-refname 'refs/remotes/origin/*' | cut -d/ -f4- | grep -E '^[0-9]+' | head -n1)
+
+if [ "$SOURCE_BRANCH" = "$latest" ]; then
+	push latest
+fi
